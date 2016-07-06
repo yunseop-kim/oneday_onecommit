@@ -9,8 +9,8 @@ module.exports = {
   DOMAIN:           'http://localhost:9000',
   SESSION_SECRET:   'onedayonecommitproject-secret',
 
-  FACEBOOK_ID:      'app-id',
-  FACEBOOK_SECRET:  'secret',
+  FACEBOOK_ID:      '1052552241489659',
+  FACEBOOK_SECRET:  'e8b14286a40679262808b6dbddb9b0df',
 
   GOOGLE_ID:        'app-id',
   GOOGLE_SECRET:    'secret',

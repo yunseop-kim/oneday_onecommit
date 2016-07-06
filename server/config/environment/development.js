@@ -9,7 +9,7 @@ module.exports = {
     uri: 'mysql://root:ngensoft@localhost:3306/oneday_onecommit_project',
     options: {
       logging: false,
-      storage: 'dev.sqlite',
+      // storage: 'dev.sqlite',
       define: {
         timestamps: false
       }
@@ -17,6 +17,6 @@ module.exports = {
   },
 
   // Seed database on startup
-  seedDB: true
+  seedDB: false
 
 };
