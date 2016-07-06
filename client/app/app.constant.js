@@ -1,5 +1,5 @@
 (function(angular, undefined) {
-  angular.module("onedayOnecommitAngularProjectApp.constants", [])
+  angular.module("onedayOnecommitProjectApp.constants", [])
 
 .constant("appConfig", {
 	"userRoles": [

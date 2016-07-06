@@ -38,8 +38,9 @@ module.exports = function(sequelize, DataTypes) {
     },
     provider: DataTypes.STRING,
     salt: DataTypes.STRING,
-    facebook: DataTypes.JSON,
-    github: DataTypes.JSON
+    facebook: DataTypes.STRING,
+    google: DataTypes.STRING,
+    github: DataTypes.STRING
 
   }, {
 

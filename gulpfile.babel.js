@@ -1,4 +1,4 @@
-// Generated on 2016-07-05 using generator-angular-fullstack 3.7.6
+// Generated on 2016-07-06 using generator-angular-fullstack 3.7.6
 'use strict';
 
 import _ from 'lodash';
@@ -27,15 +27,14 @@ const paths = {
         assets: `${clientPath}/assets/**/*`,
         images: `${clientPath}/assets/images/**/*`,
         scripts: [
-            `${clientPath}/**/!(*.spec|*.mock).ts`,
-            `!${clientPath}/bower_components/**/*`,
-            `!${clientPath}/{typings,test_typings}/**/*`
+            `${clientPath}/**/!(*.spec|*.mock).js`,
+            `!${clientPath}/bower_components/**/*`
         ],
         styles: [`${clientPath}/{app,components}/**/*.less`],
         mainStyle: `${clientPath}/app/app.less`,
         views: `${clientPath}/{app,components}/**/*.html`,
         mainView: `${clientPath}/index.html`,
-        test: [`${clientPath}/{app,components}/**/*.{spec,mock}.ts`],
+        test: [`${clientPath}/{app,components}/**/*.{spec,mock}.js`],
         e2e: ['e2e/**/*.spec.js'],
         bower: `${clientPath}/bower_components/`
     },
@@ -91,7 +90,7 @@ function whenServerReady(cb) {
 }
 
 function sortModulesFirst(a, b) {
-    var module = /\.module\.ts$/;
+    var module = /\.module\.js$/;
     var aMod = module.test(a.path);
     var bMod = module.test(b.path);
     // inject *.module.js first
@@ -114,8 +113,8 @@ function sortModulesFirst(a, b) {
  ********************/
 
 let lintClientScripts = lazypipe()
-    .pipe(plugins.tslint, require(`./${clientPath}/tslint.json`))
-    .pipe(plugins.tslint.report, 'verbose');
+    .pipe(plugins.jshint, `${clientPath}/.jshintrc`)
+    .pipe(plugins.jshint.reporter, 'jshint-stylish');
 
 let lintServerScripts = lazypipe()
     .pipe(plugins.jshint, `${serverPath}/.jshintrc`)
@@ -130,6 +129,11 @@ let styles = lazypipe()
     .pipe(plugins.less)
 
     .pipe(plugins.autoprefixer, {browsers: ['last 1 version']})
+    .pipe(plugins.sourcemaps.write, '.');
+
+let transpileClient = lazypipe()
+    .pipe(plugins.sourcemaps.init)
+    .pipe(plugins.babel)
     .pipe(plugins.sourcemaps.write, '.');
 
 let transpileServer = lazypipe()
@@ -197,53 +201,20 @@ gulp.task('env:prod', () => {
  ********************/
 
 gulp.task('inject', cb => {
-    runSequence(['inject:js', 'inject:css', 'inject:less', 'inject:tsconfig'], cb);
+    runSequence(['inject:js', 'inject:css', 'inject:less'], cb);
 });
 
 gulp.task('inject:js', () => {
     return gulp.src(paths.client.mainView)
         .pipe(plugins.inject(
-            gulp.src(_.union(paths.client.scripts, ['client/app/app.constant.js', `!${clientPath}/**/*.{spec,mock}.ts`, `!${clientPath}/app/app.ts`]), {read: false})
+            gulp.src(_.union(paths.client.scripts, [`!${clientPath}/**/*.{spec,mock}.js`, `!${clientPath}/app/app.js`]), {read: false})
                 .pipe(plugins.sort(sortModulesFirst)),
             {
                 starttag: '<!-- injector:js -->',
                 endtag: '<!-- endinjector -->',
-                transform: (filepath) => '<script src="' + filepath.replace(`/${clientPath}/`, '').replace('.ts', '.js') + '"></script>'
+                transform: (filepath) => '<script src="' + filepath.replace(`/${clientPath}/`, '') + '"></script>'
             }))
         .pipe(gulp.dest(clientPath));
-});
-
-function injectTsConfig(filesGlob, tsconfigPath){
-    let src = gulp.src(filesGlob, {read: false})
-        .pipe(plugins.sort());
-
-    return gulp.src(tsconfigPath)
-        .pipe(plugins.inject(src, {
-            starttag: '"files": [',
-            endtag: ']',
-            transform: (filepath, file, i, length) => {
-                return `"${filepath.substr(1)}"${i + 1 < length ? ',' : ''}`;
-            }
-        }))
-        .pipe(gulp.dest('./'));
-}
-
-gulp.task('inject:tsconfig', () => {
-    return injectTsConfig([
-        `${clientPath}/**/!(*.spec|*.mock).ts`,
-        `!${clientPath}/bower_components/**/*`,
-        `typings/main.d.ts`
-    ], 
-    './tsconfig.client.json');
-});
-
-gulp.task('inject:tsconfigTest', () => {
-    return injectTsConfig([
-        `${clientPath}/**/+(*.spec|*.mock).ts`,
-        `!${clientPath}/bower_components/**/*`,
-        `typings/main.d.ts`
-    ], 
-    './tsconfig.client.test.json');
 });
 
 gulp.task('inject:css', () => {
@@ -277,37 +248,16 @@ gulp.task('inject:less', () => {
         .pipe(gulp.dest(`${clientPath}/app`));
 });
 
-// Install DefinitelyTyped TypeScript definition files
-gulp.task('typings', () => {
-    return gulp.src("./typings.json")
-        .pipe(plugins.typings());
-});
-
 gulp.task('styles', () => {
     return gulp.src(paths.client.mainStyle)
         .pipe(styles())
         .pipe(gulp.dest('.tmp/app'));
 });
 
-gulp.task('copy:constant', ['constant'], () => {
-    return gulp.src(`${clientPath}/app/app.constant.js`, { dot: true })
-        .pipe(gulp.dest('.tmp/app'));
-})
-
-gulp.task('transpile:client', ['typings', 'copy:constant'], () => {
-    return gulp.src(['client/{app,components}/**/!(*.spec|*.mock).ts', 'typings/main.d.ts'])
-        .pipe(plugins.sourcemaps.init())
-        .pipe(plugins.typescript()).js
-        .pipe(plugins.sourcemaps.write('.'))
+gulp.task('transpile:client', () => {
+    return gulp.src(paths.client.scripts)
+        .pipe(transpileClient())
         .pipe(gulp.dest('.tmp'));
-});
-
-gulp.task('transpile:client:test', ['typings'], () => {
-    return gulp.src(['client/{app,components}/**/+(*.spec|*.mock).ts', 'typings/main.d.ts'])
-        .pipe(plugins.sourcemaps.init())
-        .pipe(plugins.typescript()).js
-        .pipe(plugins.sourcemaps.write('.'))
-        .pipe(gulp.dest('.tmp/test'));
 });
 
 gulp.task('transpile:server', () => {
@@ -322,7 +272,7 @@ gulp.task('lint:scripts:client', () => {
     return gulp.src(_.union(
         paths.client.scripts,
         _.map(paths.client.test, blob => '!' + blob),
-        [`!${clientPath}/app/app.constant.ts`]
+        [`!${clientPath}/app/app.constant.js`]
     ))
         .pipe(lintClientScripts());
 });
@@ -400,7 +350,11 @@ gulp.task('watch', () => {
         .pipe(plugins.plumber())
         .pipe(plugins.livereload());
 
-    gulp.watch(paths.client.scripts, ['lint:scripts:client', 'transpile:client']);
+    plugins.watch(paths.client.scripts) //['inject:js']
+        .pipe(plugins.plumber())
+        .pipe(transpileClient())
+        .pipe(gulp.dest('.tmp'))
+        .pipe(plugins.livereload());
 
     plugins.watch(_.union(paths.server.scripts, testFiles))
         .pipe(plugins.plumber())
@@ -411,7 +365,7 @@ gulp.task('watch', () => {
 });
 
 gulp.task('serve', cb => {
-    runSequence(['clean:tmp', 'constant', 'env:all', 'typings'],
+    runSequence(['clean:tmp', 'constant', 'env:all'],
         ['lint:scripts', 'inject'],
         ['wiredep:client'],
         ['transpile:client', 'styles'],
@@ -430,7 +384,7 @@ gulp.task('serve:dist', cb => {
 });
 
 gulp.task('serve:debug', cb => {
-    runSequence(['clean:tmp', 'constant', 'typings'],
+    runSequence(['clean:tmp', 'constant'],
         ['lint:scripts', 'inject'],
         ['wiredep:client'],
         ['transpile:client', 'styles'],
@@ -464,7 +418,7 @@ gulp.task('mocha:integration', () => {
         .pipe(mocha());
 });
 
-gulp.task('test:client', ['wiredep:test', 'constant', 'transpile:client', 'transpile:client:test'], (done) => {
+gulp.task('test:client', ['wiredep:test', 'constant'], (done) => {
     new KarmaServer({
       configFile: `${__dirname}/${paths.karma}`,
       singleRun: true
@@ -517,7 +471,6 @@ gulp.task('build', cb => {
         ],
         'inject',
         'wiredep:client',
-        'typings',
         [
             'transpile:client',
             'transpile:server'
@@ -568,7 +521,7 @@ gulp.task('build:client', ['styles', 'html', 'constant', 'build:images'], () => 
 gulp.task('html', function() {
     return gulp.src(`${clientPath}/{app,components}/**/*.html`)
         .pipe(plugins.angularTemplatecache({
-            module: 'onedayOnecommitAngularProjectApp'
+            module: 'onedayOnecommitProjectApp'
         }))
         .pipe(gulp.dest('.tmp'));
 });
@@ -576,7 +529,7 @@ gulp.task('html', function() {
 gulp.task('constant', function() {
   let sharedConfig = require(`./${serverPath}/config/environment/shared`);
   return plugins.ngConstant({
-    name: 'onedayOnecommitAngularProjectApp.constants',
+    name: 'onedayOnecommitProjectApp.constants',
     deps: [],
     wrap: true,
     stream: true,

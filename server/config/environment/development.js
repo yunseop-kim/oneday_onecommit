@@ -6,7 +6,7 @@ module.exports = {
 
   // Sequelize connection opions
   sequelize: {
-    uri: 'sqlite://',
+    uri: 'mysql://root:ngensoft@localhost:3306/oneday_onecommit_project',
     options: {
       logging: false,
       storage: 'dev.sqlite',

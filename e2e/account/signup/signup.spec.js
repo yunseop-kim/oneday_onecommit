@@ -44,6 +44,8 @@ describe('Signup View', function() {
   it('should include oauth buttons with correct classes applied', function() {
     page.form.oauthButtons.facebook.getText().should.eventually.equal('Connect with Facebook');
     page.form.oauthButtons.facebook.getAttribute('class').should.eventually.contain('btn-block');
+    page.form.oauthButtons.google.getText().should.eventually.equal('Connect with Google+');
+    page.form.oauthButtons.google.getAttribute('class').should.eventually.contain('btn-block');
   });
 
   describe('with local auth', function() {

@@ -15,11 +15,11 @@
     "modelsNeedle": "// Insert models below",
     "filters": {
       "js": true,
-      "ts": true,
+      "babel": true,
       "flow": false,
       "html": true,
       "less": true,
-      "ngroute": true,
+      "uirouter": true,
       "bootstrap": true,
       "uibootstrap": true,
       "socketio": true,
@@ -28,6 +28,7 @@
       "sequelizeModels": true,
       "sequelize": true,
       "oauth": true,
+      "googleAuth": true,
       "facebookAuth": true,
       "gulp": true,
       "mocha": true,
@@ -46,14 +47,14 @@
     "moduleName": "",
     "modulePrompt": true,
     "filters": [
-      "ngroute",
+      "uirouter",
       "mocha",
       "should",
-      "ngroute",
+      "uirouter",
       "es6"
     ],
     "extensions": [
-      "ts",
+      "babel",
       "js",
       "html",
       "less"

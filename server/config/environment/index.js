@@ -29,7 +29,7 @@ var all = {
 
   // Secret for session, you will want to change this and make it an environment variable
   secrets: {
-    session: 'oneday-onecommit-angular-project-secret'
+    session: 'oneday-onecommit-project-secret'
   },
 
   // MongoDB connection options
@@ -45,6 +45,12 @@ var all = {
     clientID:     process.env.FACEBOOK_ID || 'id',
     clientSecret: process.env.FACEBOOK_SECRET || 'secret',
     callbackURL:  (process.env.DOMAIN || '') + '/auth/facebook/callback'
+  },
+
+  google: {
+    clientID:     process.env.GOOGLE_ID || 'id',
+    clientSecret: process.env.GOOGLE_SECRET || 'secret',
+    callbackURL:  (process.env.DOMAIN || '') + '/auth/google/callback'
   }
 };
 
