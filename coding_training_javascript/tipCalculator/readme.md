@@ -63,3 +63,29 @@ The total is $230.00
 ## 코드 작성
 - 제약 조건
     - 
+
+---
+### mocha test 오류
+```
+import tipCalculator from '../tipCalculator';
+^^^^^^
+SyntaxError: Unexpected token import
+
+```
+
+- 위와 같은 에러가 발생하였음.
+- mocha에서 es6 문법을 인식하지 못해서 생긴 문제이다.
+- http://jamesknelson.com/testing-in-es6-with-mocha-and-babel-6/ 참조함
+
+아래와 같은 명령어를 써 줌
+- npm install babel-core --save-dev
+- npm install babel-preset-stage-0 --save-dev
+
+.babelrc 파일 생성 후
+```
+{
+  "presets": ["es2015"]
+}
+```
+
+- mocha --compilers js:babel-core/register
