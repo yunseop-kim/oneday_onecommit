@@ -57,6 +57,10 @@ The total is $230.00
     - Tip: $1.69
     - Total: $12.94
 - 이는 반올림 계산을 위함
+    - 반올림
+        - n.toFixed(2) 는 안됨
+        - '소숫점 2번째까지 반올림 : Math.round(123.4567*100)/100;
+
 
 ## 의사 코드로 테스트 프로그램 작성
 
@@ -88,4 +92,5 @@ SyntaxError: Unexpected token import
 }
 ```
 
+테스트 수행 명령어
 - mocha --compilers js:babel-core/register
