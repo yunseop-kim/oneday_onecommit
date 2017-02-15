@@ -1,5 +1,4 @@
 var assert = require('assert');
-// var tipCalculator = require('../tipCalculator');
 import tipCalculator from '../tipCalculator';
 var CONFIG = require('../config');
 let test = new tipCalculator(CONFIG.INPUT_VALUE.AMOUNT, CONFIG.INPUT_VALUE.RATE);
