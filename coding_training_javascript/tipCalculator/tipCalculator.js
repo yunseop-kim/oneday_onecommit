@@ -37,8 +37,6 @@ class tipCalculator {
         console.log('getTotal --->', total);
         return total;
     }
-
-
 }
 
 export default tipCalculator

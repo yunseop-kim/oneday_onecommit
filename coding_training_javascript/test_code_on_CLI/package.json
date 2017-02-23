@@ -1,0 +1,19 @@
+{
+  "name": "test_code_cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "inquirer": "^3.0.3",
+    "mock-stdin": "^0.3.1"
+  },
+  "devDependencies": {
+    "bdd-stdin": "^0.2.0",
+    "mock-stdin": "^0.3.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -14,7 +14,7 @@ var fortytwo = function() { return 42 };
 ```
 - 숫자를 배열에 저장하듯이 함수를 배열에 저장
 ```Javascript
-var fortytwos [42, function() { return 42}];
+var fortytwos = [42, function() { return 42}];
 ```
 - 숫자를 객체에 저장하듯이 함수를 객체에 저장
 ```Javascript
