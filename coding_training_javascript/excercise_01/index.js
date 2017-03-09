@@ -20,7 +20,7 @@ function printOut(answer){
 }
 
 function bondingString(answer){
-    let answers = [
+    const answers = [
         `Hello, ${answer}, nice to meet you!`,
         `Hello, ${answer}, how are you?`,
         `Hello, ${answer}, how have you been?`
