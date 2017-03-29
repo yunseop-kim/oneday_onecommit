@@ -1,15 +1,15 @@
 {
-  "name": "excercise_01",
+  "name": "promise_practice",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel src -d lib"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "babel-cli": "^6.23.0",
-    "babel-preset-env": "^1.2.1"
+    "babel-cli": "^6.23.0"
   }
 }
