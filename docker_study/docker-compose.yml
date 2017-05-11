@@ -16,4 +16,5 @@ mysql:
 
 paasdata:
     image: oskarhane/data
+    # build: [path]
     command: tail -f /dev/null
